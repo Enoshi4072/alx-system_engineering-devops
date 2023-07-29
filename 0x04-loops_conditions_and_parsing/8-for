@@ -3,7 +3,7 @@
 
 for file in *
 do
-	if [[ $file == *-* ]]; then
+	if [[ -f $file && $file != .* && $file == *-* ]]; then
 	modi_file=$(echo "$file" | cut -d'-' -f2-)
 	echo "$modi_file"
 	fi
