@@ -4,7 +4,6 @@
 for file in *
 do
 	if [[ $file == *-* ]]; then
-	modi_file=$(echo "$file" | cut -d'-' -f2-)
-	echo "$modi_file"
+	echo "$file" | cut -d '-' -f2
 	fi
 done
