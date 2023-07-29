@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #A Bash script that displays: The content of the current directory.
+
+t_files=$(ls)
+for file in $t_files
 do
 	if [[ $file == *-* ]]; then
 	echo "$file" | cut -d '-' -f2
