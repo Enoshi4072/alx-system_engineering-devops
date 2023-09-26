@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Installs, configures, and starts the server
-apt-get update
-apt-get -y install nginx
+# Configure your Nginx server so that /redirect_me
+# is redirecting to another page.
+sudo apt-get -y update
+sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 mkdir -p /var/www/html/
 sudo chmod -R 755 /var/www
 echo 'Hello World!' > /var/www/html/index.html
-SERVER_CONFIG=\
-"server {
+SERVER_CONFIG="server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 	root /var/www/html;
