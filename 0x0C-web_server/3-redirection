@@ -1,21 +1,30 @@
 #!/usr/bin/env bash
-# Configures your Nginx server so that /redirect_me is redirecting to another page.
+# Installs, configures, and starts the server
 apt-get update
 apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 mkdir -p /var/www/html/
 sudo chmod -R 755 /var/www
 echo 'Hello World!' > /var/www/html/index.html
-
-REDIRECTION_CONFIG=\
-"location /redirect_me {
-    return 301 https://www.example.com/newpage;
+SERVER_CONFIG=\
+"server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+	server_name _;
+	location / {
+		try_files \$uri \$uri/ =404;
+	}
+	if (\$request_filename ~ redirect_me){
+		rewrite ^ https://sketchfab.com/bluepeno/models permanent;
+	}
 }"
 
-DEFAULT_CONFIG_FILE="/etc/nginx/sites-available/default"
-if grep -q "server_name _;" "$DEFAULT_CONFIG_FILE"; then
-    sed -i '/server_name _;/a\'"$REDIRECTION_CONFIG"'' "$DEFAULT_CONFIG_FILE"
-fi
+bash -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-enabled/default"
 
-nginx -t 
-service nginx reload
+if [ "$(pgrep -c nginx)" -le 0 ]; then
+	service nginx start
+else
+	service nginx restart
+fi
