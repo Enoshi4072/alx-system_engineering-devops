@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#Install nginx on my server
+#Nginx is listening on port 80
+
+sudo apt-get update
+sudo apt-get install -y nginx
+
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+if ! sudo service nginx status > /dev/null; then
+    sudo service nginx start
+fi
+
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
