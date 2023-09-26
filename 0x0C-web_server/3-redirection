@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Configures your Nginx server so that /redirect_me is redirecting to another page.
+apt-get update
+apt-get -y install nginx
+sudo ufw allow 'Nginx HTTP'
+mkdir -p /var/www/html/
+sudo chmod -R 755 /var/www
+echo 'Hello World!' > /var/www/html/index.html
+
+REDIRECTION_CONFIG=\
+"location /redirect_me {
+    return 301 https://www.example.com/newpage;
+}"
+
+DEFAULT_CONFIG_FILE="/etc/nginx/sites-available/default"
+if grep -q "server_name _;" "$DEFAULT_CONFIG_FILE"; then
+    sed -i '/server_name _;/a\'"$REDIRECTION_CONFIG"'' "$DEFAULT_CONFIG_FILE"
+fi
+
+nginx -t 
+service nginx reload
