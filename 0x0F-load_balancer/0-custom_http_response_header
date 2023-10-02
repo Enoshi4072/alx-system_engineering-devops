@@ -1,18 +1,41 @@
 #!/usr/bin/env bash
+# This script installs Nginx and sets a custom header
 
-# Install Nginx if not already installed
-sudo apt-get update
-sudo apt-get install -y nginx
+# Updating package information
+apt-get -y update
 
-# Define the custom response header
-CUSTOM_HEADER="add_header X-Served-By \$hostname;"
+# Installing Nginx
+apt-get -y install nginx
 
-# Create a new Nginx configuration file with the custom header
-echo "server {" | sudo tee /etc/nginx/sites-available/custom_header
-echo "    listen 80;" | sudo tee -a /etc/nginx/sites-available/custom_header
-echo "    server_name _;" | sudo tee -a /etc/nginx/sites-available/custom_header
-echo "    $CUSTOM_HEADER" | sudo tee -a /etc/nginx/sites-available/custom_header
-echo "}" | sudo tee -a /etc/nginx/sites-available/custom_header
-sudo ln -s /etc/nginx/sites-available/custom_header /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
+# Creating a simple Hello World page
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
+# Creating a custom 404 error page
+echo "Page not found indicator" > /usr/share/nginx/html/custom_404.html
+
+# Configure Nginx with custom rules
+cat <<EOL > /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    server_name _;
+
+    location / {
+        rewrite ^/redirect_me https://github.com/Tolulope05 permanent;
+    }
+
+    error_page 404 /custom_404.html;
+    
+    location = /custom_404.html {
+        root /usr/share/nginx/html;
+        internal;
+    }
+
+    add_header X-Served-By "$HOSTNAME";
+}
+EOL
+
+# Adding custom header to the Nginx configuration
+sed -i 's/include \/etc\/nginx\/sites-enabled\/\*;/include \/etc\/nginx\/sites-enabled\/\*;\n    add_header X-Served-By "$HOSTNAME";/' /etc/nginx/nginx.conf
+
+# Starting Nginx service
+service nginx start
