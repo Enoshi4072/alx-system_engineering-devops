@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-
-# Install HAProxy
+#Installs and configures HAproxy on my lb-01 server.
 apt-get update
 apt-get install -y haproxy
 
-# Configure HAProxy
+# Configuring HAProxy
 cat <<EOL > /etc/haproxy/haproxy.cfg
 global
     log /dev/log    local0
@@ -33,11 +32,11 @@ backend web-servers
     server web-02 268587-web-02:80 check
 EOL
 
-# Enable HAProxy init script
+# Enabling HAProxy init script
 sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
 
-# Start HAProxy service
+# Starting HAProxy service
 service haproxy start
 
-# Ensure HAProxy starts on boot
+# Ensuring HAProxy starts on boot
 update-rc.d haproxy defaults
