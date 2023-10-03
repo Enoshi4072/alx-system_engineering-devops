@@ -29,8 +29,8 @@ frontend web-frontend
 
 backend web-servers
     balance roundrobin
-    server web-01 [STUDENT_ID]-web-01:80 check
-    server web-02 [STUDENT_ID]-web-02:80 check
+    server web-01 268587-web-01:80 check
+    server web-02 268587-web-02:80 check
 EOL
 
 # Enable HAProxy init script
