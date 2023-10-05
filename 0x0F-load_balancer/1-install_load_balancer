@@ -1,42 +1,25 @@
 #!/usr/bin/env bash
-#Installs and configures HAproxy on my lb-01 server.
+#installs and sets up haproxy
+# Add HAProxy repository and install HAProxy
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:vbernat/haproxy-latest
 apt-get -y update
-sudo apt-get install -y haproxy
+apt-get install -y haproxy
 
-# Configuring HAProxy
-cat <<EOL > /etc/haproxy/haproxy.cfg
-global
-    log /dev/log    local0
-    log /dev/log    local1 notice
-    maxconn 2000
-    user haproxy
-    group haproxy
+# Enable HAProxy service
+echo "ENABLED=1" > /etc/default/haproxy
 
-defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
+# Configure HAProxy
+echo "
+listen load_balancer
+  bind *:80
+  mode http
+  balance roundrobin
+  option httpclose
+  option forwardfor
+  server 17272-web-01 44.200.83.158:80 check
+  server 17272-web-02 3.237.16.226:80 check
+" >> /etc/haproxy/haproxy.cfg
 
-frontend web-frontend
-    bind *:80
-    mode http
-    default_backend web-servers
-
-backend web-servers
-    balance roundrobin
-    server web-01 268587-web-01:80 check
-    server web-02 268587-web-02:80 check
-EOL
-
-# Enabling HAProxy init script
-sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
-
-# Starting HAProxy service
+# Start HAProxy service
 service haproxy start
-
-# Ensuring HAProxy starts on boot
-update-rc.d haproxy defaults
