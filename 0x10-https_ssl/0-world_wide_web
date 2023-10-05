@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Usage: ./your_script <domain> [<subdomain>]
+# Display information about subdomains.
+
+domain_information () {
+    local subdomain="$2"
+    if [ -z "$subdomain" ]; then
+        subdomain="www lb-01 web-01 web-02"
+    fi
+
+    for sub in $subdomain; do
+        line=$(dig "$sub"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
+        echo "$sub $line" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
+    done
+}
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <domain> [<subdomain>]"
+    exit 1
+fi
+
+domain_information "$1" "$2"
