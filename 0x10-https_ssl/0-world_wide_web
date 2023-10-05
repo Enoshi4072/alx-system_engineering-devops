@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Usage: ./your_script <domain> [<subdomain>]
-# Display information about subdomains.
+# Displays information about subdomains.
 
 domain_information () {
     local subdomain="$2"
