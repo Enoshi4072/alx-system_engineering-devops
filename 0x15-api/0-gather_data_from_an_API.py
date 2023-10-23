@@ -6,13 +6,13 @@ import requests
 import sys
 
 if __name__ == "__main__":
-    """ employee_id = int(sys.argv[1]) """
+    employee_id = int(sys.argv[1])
 
     base_url = "https://jsonplaceholder.typicode.com/todos"
 
     # Get the list of all todos for the given employee ID
-    response = requests.get(url + "users/{}".format(sys.argv[1])).json()
-    todos = requests.get(url + "todos", params={"userId": sys.argv[1]}).json()
+    response = requests.get(base_url + "users/{}".format(sys.argv[1])).json()
+    todos = requests.get(base_url + "todos", params={"userId": employee_id}).json()
 
     # Filter completed and total tasks
     completed_tasks = [task for task in todos if task['completed']]
