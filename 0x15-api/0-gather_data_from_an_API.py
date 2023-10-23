@@ -6,17 +6,13 @@ import requests
 import sys
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 gather_data_from_an_API.py <employee_id>")
-        sys.exit(1)
-
-    employee_id = int(sys.argv[1])
+    """ employee_id = int(sys.argv[1]) """
 
     base_url = "https://jsonplaceholder.typicode.com/todos"
 
     # Get the list of all todos for the given employee ID
-    response = requests.get(base_url, params={"userId": employee_id})
-    todos = response.json()
+    response = requests.get(url + "users/{}".format(sys.argv[1])).json()
+    todos = requests.get(url + "todos", params={"userId": sys.argv[1]}).json()
 
     # Filter completed and total tasks
     completed_tasks = [task for task in todos if task['completed']]
