@@ -4,22 +4,19 @@ API and returns a list containing the titles of
 all hot articles for a given subreddit.  """
 import requests
 
+
 def recurse(subreddit, hot_list=[], after=None):
     """
     returns a list of titles of all hot articles for a given subreddit.
 
     Args:
     subreddit (str): The name of the subreddit to query.
-    hot_list (list): A list to store the titles of hot articles (used for recursion).
-    after (str): The "after" parameter for pagination (used for recursion).
-
+    hot_list (list): A list to store the titles of hot articles
+    after (str): The "after" parameter for paginatio).
     Returns:
-    list: A list containing the titles of hot articles, or None if no results are found.
+    list: A list containing the titles of hot articles, or None.
     """
-    
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=100&after={after}"
-    
-    
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=100&after={after}"    
     headers = {'User-Agent': 'vagrant/1.0 (Ken_E)'}
     
     """ Making a request """
