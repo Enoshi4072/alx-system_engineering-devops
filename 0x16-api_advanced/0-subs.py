@@ -3,8 +3,8 @@
 returns the number of subscribers for a given subredit"""
 import requests
 
-def number_of_subscribers(subreddit):
 
+def number_of_subscribers(subreddit):
     """
     Returns the number of subscribers for
     the subreddit, or 0 if the subreddit is invalid.
